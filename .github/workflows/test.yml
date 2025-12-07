@@ -1,1 +1,54 @@
+name: Python Application Tests
 
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+        
+    - name: Test Case 1 - File with 10 numbers
+      run: |
+        python find_lowest_number.py test_data/test1_input.txt test_output1.txt
+        echo "Expected:"
+        cat test_data/test1_expected.txt
+        echo "Actual:"
+        cat test_output1.txt
+        diff test_output1.txt test_data/test1_expected.txt
+        echo "✓ Test Case 1 passed: File with 10 numbers"
+        
+    - name: Test Case 2 - File with 1 number
+      run: |
+        python find_lowest_number.py test_data/test2_input.txt test_output2.txt
+        echo "Expected:"
+        cat test_data/test2_expected.txt
+        echo "Actual:"
+        cat test_output2.txt
+        diff test_output2.txt test_data/test2_expected.txt
+        echo "✓ Test Case 2 passed: File with 1 number"
+        
+    - name: Test Case 3 - Blank file
+      run: |
+        python find_lowest_number.py test_data/test3_input.txt test_output3.txt
+        echo "Expected:"
+        cat test_data/test3_expected.txt
+        echo "Actual:"
+        cat test_output3.txt
+        diff test_output3.txt test_data/test3_expected.txt
+        echo "✓ Test Case 3 passed: Blank file"
+        
+    - name: Clean up test files
+      run: |
+        rm -f test_output1.txt test_output2.txt test_output3.txt
