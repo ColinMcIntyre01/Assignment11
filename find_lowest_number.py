@@ -1,24 +1,8 @@
 #!/usr/bin/env python3
-# The script will find the lowest number in a file and write it to another file.
-#
-# Run as: python3 find_lowest_number.py <input_file> <output_file>
-#
-# Example: python3 find_lowest_number.py numbers.txt lowest_number.txt
-#
-# If python is setup to run as "python" instead of "python3" on the machine, 
-# then we should use "python" instead of "python3" in the above.
-#
-# The input file should contain one number per line. The output file will 
-# contain the lowest number.
-#
-# If the input file is blank, the output file will contain the text: "No 
-# numbers found in file".
-
 import sys
 
 def find_lowest_number(input_file, output_file):
     try:
-        # Read the input file
         with open(input_file, 'r') as f:
             lines = f.readlines()
         
@@ -26,45 +10,34 @@ def find_lowest_number(input_file, output_file):
         numbers = []
         for line in lines:
             line = line.strip()
-            if line:  # Only process non-empty lines
+            if line:
                 numbers.append(line)
         
         # Check if we have any numbers
         if not numbers:
             with open(output_file, 'w') as f:
-                f.write("No numbers found in file")
+                f.write("No numbers found in file\n")  # Add newline
             return
         
-        # Convert to integers (use float if decimals are possible)
-        # But based on the test, we should use int since test files have integers
+        # Convert to integers
         try:
             numbers_int = [int(num) for num in numbers]
         except ValueError:
-            # If integers fail, try floats
-            numbers_float = [float(num) for num in numbers]
-            lowest = min(numbers_float)
-            # Write as integer if it's a whole number
-            if lowest.is_integer():
-                with open(output_file, 'w') as f:
-                    f.write(str(int(lowest)))
-            else:
-                with open(output_file, 'w') as f:
-                    f.write(str(lowest))
-            return
+            print("Error: Non-integer value found in input file")
+            sys.exit(1)
         
-        # Find the lowest number and write as integer
+        # Find the lowest number
         lowest = min(numbers_int)
+        
+        # Write to output file WITH newline
         with open(output_file, 'w') as f:
-            f.write(str(lowest))
+            f.write(f"{lowest}\n")  # Add newline here
             
     except FileNotFoundError:
         print(f"Error: Input file '{input_file}' not found.")
         sys.exit(1)
-    except ValueError as e:
-        print(f"Error: Invalid number in input file: {e}")
-        sys.exit(1)
     except Exception as e:
-        print(f"Unexpected error: {e}")
+        print(f"Error: {e}")
         sys.exit(1)
 
 if __name__ == "__main__":
