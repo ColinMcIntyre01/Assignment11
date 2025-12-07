@@ -19,36 +19,51 @@ jobs:
       with:
         python-version: '3.10'
         
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        
     - name: Test Case 1 - File with 10 numbers
+      id: test1
       run: |
         python find_lowest_number.py test_data/test1_input.txt test_output1.txt
-        echo "Expected:"
-        cat test_data/test1_expected.txt
-        echo "Actual:"
-        cat test_output1.txt
-        diff test_output1.txt test_data/test1_expected.txt
-        echo "✓ Test Case 1 passed: File with 10 numbers"
+        if diff test_output1.txt test_data/test1_expected.txt; then
+          echo "✓ Test Case 1 passed: File with 10 numbers"
+          echo "TEST1_RESULT=passed" >> $GITHUB_OUTPUT
+        else
+          echo "✗ Test Case 1 failed: File with 10 numbers"
+          echo "Differences:"
+          diff test_output1.txt test_data/test1_expected.txt
+          echo "TEST1_RESULT=failed" >> $GITHUB_OUTPUT
+          exit 1
+        fi
         
     - name: Test Case 2 - File with 1 number
+      id: test2
       run: |
         python find_lowest_number.py test_data/test2_input.txt test_output2.txt
-        echo "Expected:"
-        cat test_data/test2_expected.txt
-        echo "Actual:"
-        cat test_output2.txt
-        diff test_output2.txt test_data/test2_expected.txt
-        echo "✓ Test Case 2 passed: File with 1 number"
+        if diff test_output2.txt test_data/test2_expected.txt; then
+          echo "✓ Test Case 2 passed: File with 1 number"
+          echo "TEST2_RESULT=passed" >> $GITHUB_OUTPUT
+        else
+          echo "✗ Test Case 2 failed: File with 1 number"
+          echo "Differences:"
+          diff test_output2.txt test_data/test2_expected.txt
+          echo "TEST2_RESULT=failed" >> $GITHUB_OUTPUT
+          exit 1
+        fi
         
     - name: Test Case 3 - Blank file
+      id: test3
       run: |
         python find_lowest_number.py test_data/test3_input.txt test_output3.txt
-        echo "Expected:"
-        cat test_data/test3_expected.txt
-        echo "Actual:"
-        cat test_output3.txt
-        diff test_output3.txt test_data/test3_expected.txt
-        echo "✓ Test Case 3 passed: Blank file"
-        
-    - name: Clean up test files
-      run: |
-        rm -f test_output1.txt test_output2.txt test_output3.txt
+        if diff test_output3.txt test_data/test3_expected.txt; then
+          echo "✓ Test Case 3 passed: Blank file"
+          echo "TEST3_RESULT=passed" >> $GITHUB_OUTPUT
+        else
+          echo "✗ Test Case 3 failed: Blank file"
+          echo "Differences:"
+          diff test_output3.txt test_data/test3_expected.txt
+          echo "TEST3_RESULT=failed" >> $GITHUB_OUTPUT
+          exit 1
+        fi
